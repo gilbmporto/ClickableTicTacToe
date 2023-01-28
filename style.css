@@ -21,7 +21,8 @@ h1 {
 #result {
   margin-top: 30px;
   text-align: center;
-  font-size: larger;
+  font-size: x-large;
+  display: none;
 }
 
 .game-state {

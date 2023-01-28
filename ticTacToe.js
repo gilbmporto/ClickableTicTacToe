@@ -99,6 +99,7 @@ function checkGameSituation(gameBoard, currentPlayerSymbol) {
 		$startBtn.innerHTML = "Refresh the page to play again"
 		removeAllEventListeners()
 		hasGameStarted = false
+		$resultSection.style.display = "block"
 		return true
 	} else {
 		return false
