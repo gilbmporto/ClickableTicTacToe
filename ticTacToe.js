@@ -1,9 +1,6 @@
 // State Variables
 
-function wait(ms) {
-	return new Promise((resolve) => setTimeout(resolve(func), ms))
-}
-
+// HTML elements
 let squareOne = document.getElementById("js-cell-1")
 let squareTwo = document.getElementById("js-cell-2")
 let squareThree = document.getElementById("js-cell-3")
@@ -16,76 +13,14 @@ let squareNine = document.getElementById("js-cell-9")
 const $startBtn = document.getElementById("start-btn")
 const $resultSection = document.getElementById("result")
 const $gameState = document.getElementById("game-state")
+const $board = document.querySelector("#tictactoe-board")
 
-// State space
+// State variables space
 let gameBoard = new Array(9).fill("-")
 let players = ["O", "X"]
 let nextPlayerIndex = 1
 let currentPlayerSymbol
-
 let hasGameStarted = false
-
-function getUserInput(nextPlayerSymbol) {
-	let position = prompt(`${nextPlayerSymbol}, What is your move?`)
-
-	if (
-		isNaN(parseInt(position)) ||
-		parseInt(position) < 1 ||
-		parseInt(position) > 9
-	) {
-		alert("Please enter a number between or equal to 1 and 9.")
-	}
-
-	return position - 1
-}
-
-function isMoveValid(coordinates, gameBoard) {
-	let validMove = false
-
-	let position = gameBoard[coordinates]
-
-	if (position === "#") {
-		validMove = true
-		return validMove
-	}
-
-	if (position === "X" || position === "O") {
-		validMove = false
-		alert("This position is already occupied")
-		return validMove
-	}
-
-	if (position < 0 || position > 8) {
-		validMove = false
-		alert("This position is not valid")
-		return validMove
-	}
-}
-
-function makeAMove(gameBoard, nextPlayerSymbol) {
-	// clone the game board before placing moves in it
-	let newGameBoard = JSON.parse(JSON.stringify(gameBoard))
-	let coordinates
-	let moveIsValid = false
-
-	// if (isMoveValid(coordinates, newGameBoard)) {
-	// 	newGameBoard[coordinates] = nextPlayerSymbol
-	// 	return newGameBoard
-	// } else {
-	//   alert("This position is already occupied")
-	//   return newGameBoard
-	// }
-
-	do {
-		coordinates = getUserInput(nextPlayerSymbol)
-		if (isMoveValid(coordinates, newGameBoard)) {
-			newGameBoard[coordinates] = nextPlayerSymbol
-			moveIsValid = true
-		}
-	} while (!moveIsValid)
-
-	return newGameBoard
-}
 
 function hasLastMoverWon(lastMove, gameBoard) {
 	let winnerCombos = [
@@ -137,43 +72,6 @@ function isGameOver(gameBoard, currentPlayerSymbol) {
 		// Return: winner/draw OR game is still in progress
 	} else {
 		return false
-	}
-}
-
-async function ticTacToe() {
-	try {
-		let beginTheGame = prompt(
-			"Welcome to Tic Tac Toe!\n Shall we begin?\n (Type yes or no)"
-		)
-		if (beginTheGame.toLowerCase() === "yes") {
-			// Computations
-			do {
-				nextPlayerIndex = (nextPlayerIndex + 1) % 2
-				currentPlayerSymbol = players[nextPlayerIndex]
-				gameBoard = makeAMove(gameBoard, currentPlayerSymbol)
-
-				squareOne.innerHTML = gameBoard[0]
-				squareTwo.innerHTML = gameBoard[1]
-				squareThree.innerHTML = gameBoard[2]
-				squareFour.innerHTML = gameBoard[3]
-				squareFive.innerHTML = gameBoard[4]
-				squareSix.innerHTML = gameBoard[5]
-				squareSeven.innerHTML = gameBoard[6]
-				squareEight.innerHTML = gameBoard[7]
-				squareNine.innerHTML = gameBoard[8]
-
-				await wait(1000)
-			} while (!isGameOver(gameBoard, currentPlayerSymbol))
-		} else if (beginTheGame.toLowerCase() === "no") {
-			alert("Ok, see ya!")
-		} else {
-			alert("Please enter yes or no!\nWait 2 seconds and try again!")
-			ticTacToe()
-		}
-
-		console.log(gameBoard)
-	} catch (err) {
-		console.log(`${err.name}: ${err.message}`)
 	}
 }
 
@@ -344,11 +242,17 @@ function handleStartGame() {
 
 		currentPlayerSymbol = players[nextPlayerIndex]
 		$gameState.innerText = `Next player: ${players[nextPlayerIndex]}!`
+		$board.removeEventListener("click", boardWarning)
 	} else {
 		alert("Game has already started!")
 	}
 }
 
+function boardWarning() {
+	alert("Press the 'START' button to play the game!")
+}
+
 $startBtn.addEventListener("click", handleStartGame)
+$board.addEventListener("click", boardWarning)
 
 // ticTacToe()
